@@ -1,6 +1,6 @@
 class TweetsController < ApplicationController
 
-  before_action :set_tweets_yo, only: [:show, :edit, :update, :destroy]
+  before_action :set_tweets, only: [:show, :edit, :update, :destroy]
 
   before_filter :authenticate_user!
 
@@ -31,10 +31,26 @@ class TweetsController < ApplicationController
     end
   end
 
+  def update
+    respond_to do |format|
+      if @tweet.update(tweet_params)
+        format.html {redirect_to @tweet, notice: 'Tweet was updated!'}
+      else
+        format.hmtl {render :edit}
+      end
+    end
+  end
+
+  def destroy
+    @tweet.destroy
+    respond_to do |format|
+      format.html {redirect_to tweets_url, notice: 'Tweet was deleted for you.'}
+    end
+  end
 
   private
 
-    def set_tweets_yo
+    def set_tweets
       @tweet = Tweet.find(params[:id])
     end
 
